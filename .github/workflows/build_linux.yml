@@ -1,0 +1,38 @@
+name: Linux Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  INSTALL_PATH: /home/runner/protobuf
+  VERSION: 32.1
+  
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build Project
+      run: |
+        mkdir ${{ env.INSTALL_PATH }}
+        wget https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.VERSION }}/protobuf-${{ env.VERSION }}.tar.gz
+        tar -xzf protobuf-${{ env.VERSION }}.tar.gz
+        cd protobuf-${{ env.VERSION }}
+        ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
+        make
+        sudo make install
+        sudo ldconfig
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Linux-artifact
+        path: ${{ env.INSTALL_PATH }}
+        if-no-files-found: ignore
+        retention-days: 0
