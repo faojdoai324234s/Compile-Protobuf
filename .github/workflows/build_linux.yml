@@ -27,6 +27,7 @@ jobs:
         cmake -S . -B build -D CMAKE_INSTALL_PREFIX=${{ env.INSTALL_PATH }} -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_STANDARD=17 -D protobuf_BUILD_TESTS=OFF
         cmake --build build
         sudo cmake --install build
+        .${{ env.INSTALL_PATH }}/bin/protoc --cpp_out=${{ env.INSTALL_PATH }} widevine_protocol.proto
 #        ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
 #        make
 #        sudo make install
