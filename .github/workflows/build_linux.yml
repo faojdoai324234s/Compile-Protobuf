@@ -18,9 +18,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build Project
+    - name: Make proto source files
       run: |
         mkdir ${{ env.INSTALL_PATH }}
+        unzip protobuf-3.21.12.zip
+        ./bin/protoc --cpp_out=${{ env.INSTALL_PATH }} widevine_protocol.proto
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Linux-artifact
+        path: ${{ env.INSTALL_PATH }}
+        if-no-files-found: ignore
+        retention-days: 0
+        
+    - name: Build Project
+      run: |
+        amkdir ${{ env.INSTALL_PATH }}
         wget https://github.com/protocolbuffers/protobuf/archive/refs/tags/v${{ env.VERSION }}.tar.gz
         tar -xzf v${{ env.VERSION }}.tar.gz
         cd protobuf-${{ env.VERSION }}
