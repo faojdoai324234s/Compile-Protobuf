@@ -23,7 +23,7 @@ jobs:
         mkdir ${{ env.INSTALL_PATH }}
         wget https://github.com/protocolbuffers/protobuf/archive/refs/tags/v${{ env.VERSION }}.tar.gz
         tar -xzf v${{ env.VERSION }}.tar.gz
-        cd v${{ env.VERSION }}
+        cd protobuf-${{ env.VERSION }}
         ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
         make
         sudo make install
