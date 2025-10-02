@@ -21,7 +21,7 @@ jobs:
     - name: Build Project
       run: |
         mkdir ${{ env.INSTALL_PATH }}
-        https://github.com/protocolbuffers/protobuf/archive/refs/tags/v${{ env.VERSION }}.tar.gz
+        wget https://github.com/protocolbuffers/protobuf/archive/refs/tags/v${{ env.VERSION }}.tar.gz
         tar -xzf v${{ env.VERSION }}.tar.gz
         cd v${{ env.VERSION }}
         ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
