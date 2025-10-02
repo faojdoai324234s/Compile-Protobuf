@@ -24,17 +24,13 @@ jobs:
         wget https://github.com/protocolbuffers/protobuf/archive/refs/tags/v${{ env.VERSION }}.tar.gz
         tar -xzf v${{ env.VERSION }}.tar.gz
         cd protobuf-${{ env.VERSION }}
-        ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
-        make
-        sudo make install
-        sudo ldconfig
-#        cmake -S . -B build -D CMAKE_INSTALL_PREFIX=${{ env.INSTALL_PATH }} -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_STANDARD=17 -D protobuf_BUILD_TESTS=OFF
-#        cmake --build build
-#        sudo cmake --install build
+        cmake -S . -B build -D CMAKE_INSTALL_PREFIX=${{ env.INSTALL_PATH }} -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_STANDARD=17 -D protobuf_BUILD_TESTS=OFF
+        cmake --build build
+        sudo cmake --install build
+#        ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
 #        make
 #        sudo make install
 #        sudo ldconfig
-#        ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
         
     - name: Upload artifact
       uses: actions/upload-artifact@v4
