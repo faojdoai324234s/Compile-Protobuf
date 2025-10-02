@@ -23,6 +23,7 @@ jobs:
         mkdir ${{ env.INSTALL_PATH }}
         wget https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.VERSION }}/protobuf-${{ env.VERSION }}.tar.gz
         tar -xzf protobuf-${{ env.VERSION }}.tar.gz
+        tar -xzf protobuf-${{ env.VERSION }}.tar
         cd protobuf-${{ env.VERSION }}
         ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
         make
