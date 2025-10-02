@@ -10,7 +10,7 @@ on:
 
 env:
   INSTALL_PATH: /home/runner/protobuf
-  VERSION: 32.1
+  VERSION: 3.21.12
   
 jobs:
   build:
@@ -18,19 +18,34 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build Project
+    - name: Make proto source files
       run: |
         mkdir ${{ env.INSTALL_PATH }}
-        wget https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.VERSION }}/protobuf-${{ env.VERSION }}.tar.gz
-        tar -xzf protobuf-${{ env.VERSION }}.tar.gz
+        unzip protobuf-3.21.12.zip
+        ./bin/protoc --cpp_out=${{ env.INSTALL_PATH }} widevine_protocol.proto
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Linux-artifact
+        path: ${{ env.INSTALL_PATH }}
+        if-no-files-found: ignore
+        retention-days: 0
+        
+    - name: Build Project
+      run: |
+        amkdir ${{ env.INSTALL_PATH }}
+        wget https://github.com/protocolbuffers/protobuf/archive/refs/tags/v${{ env.VERSION }}.tar.gz
+        tar -xzf v${{ env.VERSION }}.tar.gz
         cd protobuf-${{ env.VERSION }}
         cmake -S . -B build -D CMAKE_INSTALL_PREFIX=${{ env.INSTALL_PATH }} -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_STANDARD=17 -D protobuf_BUILD_TESTS=OFF
         cmake --build build
         sudo cmake --install build
+        .${{ env.INSTALL_PATH }}/bin/protoc --cpp_out=${{ env.INSTALL_PATH }} widevine_protocol.proto
+#        ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
 #        make
 #        sudo make install
 #        sudo ldconfig
-#        ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
         
     - name: Upload artifact
       uses: actions/upload-artifact@v4
