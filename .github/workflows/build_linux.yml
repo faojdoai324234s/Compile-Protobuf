@@ -18,19 +18,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build Project
+    - name: Install dependencies
       run: |
+        unzip protobuf-32.1.0.zip
         mkdir ${{ env.INSTALL_PATH }}
-        wget https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.VERSION }}/protobuf-${{ env.VERSION }}.tar.gz
-        tar -xzf protobuf-${{ env.VERSION }}.tar.gz
-        cd protobuf-${{ env.VERSION }}
-        cmake -S . -B build -D CMAKE_INSTALL_PREFIX=${{ env.INSTALL_PATH }} -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_STANDARD=17 -D protobuf_BUILD_TESTS=OFF
-        cmake --build build
-        sudo cmake --install build
-#        make
-#        sudo make install
-#        sudo ldconfig
-#        ./configure --prefix=${{ env.INSTALL_PATH }} --disable-shared CXXFLAGS="-fPIC"
+        ./bin/protoc --version
+        ./bin/protoc --cpp_out=${{ env.INSTALL_PATH }} widevine_protocol.proto
         
     - name: Upload artifact
       uses: actions/upload-artifact@v4
